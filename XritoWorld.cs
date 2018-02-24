@@ -2,12 +2,13 @@ using Terraria;
 using Terraria.ModLoader;
 using XritoMod.Items;
 using System;
+using Terraria.ModLoader.IO;
 
 namespace XritoMod
 {
 	public class XritoWorld : ModWorld
     {
-		public override void PostUpdate()
+		public override void PreUpdate()
         {
 			if(RemoteSundial.isSkipping)
             {
@@ -32,5 +33,17 @@ namespace XritoMod
 				}
 			}
 		}
-	}
+
+        public override TagCompound Save()
+        {
+            TagCompound tagCompound = new TagCompound();
+            tagCompound["terraPoints"] = XritoMod.Instance.clickerGUI.points;
+            return tagCompound;
+        }
+
+        public override void Load(TagCompound tag)
+        {
+            XritoMod.Instance.clickerGUI.points = tag.GetInt("terraPoints");
+        }
+    }
 }

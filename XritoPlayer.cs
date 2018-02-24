@@ -6,15 +6,18 @@ using System;
 namespace XritoMod
 {
     class XritoPlayer : ModPlayer
-    {
-        public bool isClickerOpen = false;
-
+    { 
         public override void UpdateDead()
         {
             if (Main.player[Main.myPlayer].dead)
             {
-                isClickerOpen = false;
+                ClickerGUI.isVisible = false;
             }
+        }
+
+        public override void OnEnterWorld(Player player)
+        {
+            XritoMod.Instance.clickerGUI.OnWorldLoad();
         }
     }
 }

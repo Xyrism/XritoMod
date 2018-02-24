@@ -5,11 +5,15 @@ using Terraria.DataStructures;
 using Terraria.ObjectData;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace XritoMod.Tiles
 {
     class ClickerAccess : ModTile
     {
+
+        private const string hoverText = "Right click to access\nLeft click to operate";
+        private bool isPressed = false;
 
         public override void SetDefaults()
         {
@@ -52,13 +56,30 @@ namespace XritoMod.Tiles
 
         public override void MouseOver(int i, int j)
         {
-            
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+
+            if (!ClickerGUI.isVisible)
+            {
+                player.showItemIconText = hoverText;
+                player.showItemIcon = true;
+                player.showItemIcon2 = -1;
+
+                if (Main.mouseLeft && !Main.mouseLeftRelease)
+                {
+                    isPressed = true;
+                }
+                if (isPressed && Main.mouseLeftRelease)
+                {
+                    XritoMod.Instance.clickerGUI.Clicked();
+                    isPressed = false;
+                }
+            }
         }
 
         public override void RightClick(int i, int j)
         {
-            XritoPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<XritoPlayer>(XritoMod.Instance);
-            modPlayer.isClickerOpen = !modPlayer.isClickerOpen;
+            ClickerGUI.isVisible = !ClickerGUI.isVisible;
         }
     }
 }

@@ -13,17 +13,7 @@ namespace XritoMod
 
         internal static XritoMod Instance;
         private UserInterface clickerInterface;
-        internal ClickerGUI clickerGUI;
-        
-		public XritoMod()
-        {
-			Properties = new ModProperties()
-            {
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
-		}
+        public ClickerGUI clickerGUI;
 
         public override void Load()
         {
@@ -31,6 +21,9 @@ namespace XritoMod
 
             if (!Main.dedServ)
             {
+                ClickerGUI.mainButtonUp = GetTexture("ClickerButton");
+                ClickerGUI.mainButtonDown = GetTexture("ClickerButton_Pressed");
+
                 clickerInterface = new UserInterface();
                 clickerGUI = new ClickerGUI();
                 clickerGUI.Activate();
@@ -40,13 +33,15 @@ namespace XritoMod
 
         public override void Unload()
         {
+            ClickerGUI.mainButtonUp = null;
+            ClickerGUI.mainButtonDown = null;
             Instance = null;
         }
 
         public override void AddRecipes()
         {
 			Mod thoriumMod = ModLoader.GetMod("ThoriumMod");
-			if(thoriumMod != null)
+			if (thoriumMod != null)
             {
 					ModRecipe recipe = new ModRecipe(this);
 					recipe.AddIngredient(ItemID.IronCrate);
@@ -59,15 +54,25 @@ namespace XritoMod
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             int newIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-            layers.Insert(newIndex, new LegacyGameInterfaceLayer(
-                    "XritoMod: Clicker",
-                    delegate
-                    {
-                        clickerGUI.Draw(Main.spriteBatch);
-                        return true;
-                    }
-                )
-            );
+            if (newIndex != -1)
+            {
+                layers.Insert(newIndex, new LegacyGameInterfaceLayer(
+                        "XritoMod: Clicker",
+                        delegate
+                        {
+                            clickerGUI.Draw(Main.spriteBatch);
+                            return true;
+                        },
+                        InterfaceScaleType.UI
+                    )
+                );
+            }
+        }
+
+        public override void UpdateUI(GameTime gameTime)
+        {
+            clickerInterface.Update(gameTime);
+            clickerGUI.Update(gameTime);
         }
     }
 }
