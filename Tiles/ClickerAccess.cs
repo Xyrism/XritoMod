@@ -12,7 +12,6 @@ namespace XritoMod.Tiles
     class ClickerAccess : ModTile
     {
 
-        private const string hoverText = "Right click to access\nLeft click to operate";
         private bool isPressed = false;
 
         public override void SetDefaults()
@@ -58,12 +57,12 @@ namespace XritoMod.Tiles
         {
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
+            player.showItemIcon = true;
+            player.showItemIcon2 = -1;
 
-            if (!ClickerGUI.isVisible)
+            if (!XritoMod.Instance.clickerGUI.isVisible)
             {
-                player.showItemIconText = hoverText;
-                player.showItemIcon = true;
-                player.showItemIcon2 = -1;
+                player.showItemIconText = "Right click to access\nLeft click to operate";
 
                 if (Main.mouseLeft && !Main.mouseLeftRelease)
                 {
@@ -71,15 +70,19 @@ namespace XritoMod.Tiles
                 }
                 if (isPressed && Main.mouseLeftRelease)
                 {
-                    XritoMod.Instance.clickerGUI.Clicked();
+                    XritoMod.Instance.clickerGUI.MainClicked();
                     isPressed = false;
                 }
+            }
+            else
+            {
+                player.showItemIconText = "Right click to close menu";
             }
         }
 
         public override void RightClick(int i, int j)
         {
-            ClickerGUI.isVisible = !ClickerGUI.isVisible;
+            XritoMod.Instance.clickerGUI.isVisible = !XritoMod.Instance.clickerGUI.isVisible;
         }
     }
 }

@@ -6,33 +6,33 @@ using Terraria.ModLoader.IO;
 
 namespace XritoMod
 {
-	public class XritoWorld : ModWorld
+    public class XritoWorld : ModWorld
     {
-		public override void PreUpdate()
+        public override void PreUpdate()
         {
-			if(RemoteSundial.isSkipping)
+            if (RemoteSundial.isSkipping)
             {
-				int speed = RemoteSundial.skipSpeed;
-				Main.time += speed;
-				if(Main.dayTime)
+                int speed = RemoteSundial.skipSpeed;
+                Main.time += speed;
+                if (Main.dayTime)
                 {
-					if(Main.time >= 54000)
+                    if (Main.time >= 54000)
                     {
-							Main.time = 0;
-							Main.dayTime = false;
-					}
-				}
+                        Main.time = 0;
+                        Main.dayTime = false;
+                    }
+                }
                 else
                 {
-					if(Main.time >= 32400)
+                    if (Main.time >= 32400)
                     {
-							Main.time = 0;
-							Main.dayTime = true;
-							RemoteSundial.isSkipping = false;
-					}
-				}
-			}
-		}
+                        Main.time = 0;
+                        Main.dayTime = true;
+                        RemoteSundial.isSkipping = false;
+                    }
+                }
+            }
+        }
 
         public override TagCompound Save()
         {
@@ -43,7 +43,7 @@ namespace XritoMod
 
         public override void Load(TagCompound tag)
         {
-            XritoMod.Instance.clickerGUI.points = tag.GetInt("terraPoints");
+            XritoMod.Instance.clickerGUI.points = tag.GetDouble("terraPoints");
         }
     }
 }

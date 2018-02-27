@@ -8,7 +8,7 @@ using Terraria.UI;
 
 namespace XritoMod
 {
-	public class XritoMod : Mod
+    public class XritoMod : Mod
     {
 
         internal static XritoMod Instance;
@@ -23,6 +23,10 @@ namespace XritoMod
             {
                 ClickerGUI.mainButtonUp = GetTexture("ClickerButton");
                 ClickerGUI.mainButtonDown = GetTexture("ClickerButton_Pressed");
+                ClickerGUI.closeButtonCross = GetTexture("CloseButton");
+                ClickerGUI.closeButtonDot = GetTexture("CloseButton_Locked");
+                ClickerGUI.lockButtonOpen = GetTexture("LockButton");
+                ClickerGUI.lockButtonClosed = GetTexture("LockButton_Closed");
 
                 clickerInterface = new UserInterface();
                 clickerGUI = new ClickerGUI();
@@ -35,21 +39,12 @@ namespace XritoMod
         {
             ClickerGUI.mainButtonUp = null;
             ClickerGUI.mainButtonDown = null;
+            ClickerGUI.closeButtonCross = null;
+            ClickerGUI.closeButtonDot = null;
+            ClickerGUI.lockButtonOpen = null;
+            ClickerGUI.lockButtonClosed = null;
             Instance = null;
         }
-
-        public override void AddRecipes()
-        {
-			Mod thoriumMod = ModLoader.GetMod("ThoriumMod");
-			if (thoriumMod != null)
-            {
-					ModRecipe recipe = new ModRecipe(this);
-					recipe.AddIngredient(ItemID.IronCrate);
-                    recipe.AddTile(TileID.WorkBenches);
-                    recipe.SetResult(thoriumMod.ItemType("StrangeCrate"));
-                    recipe.AddRecipe();
-			}
-		}
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
@@ -72,7 +67,6 @@ namespace XritoMod
         public override void UpdateUI(GameTime gameTime)
         {
             clickerInterface.Update(gameTime);
-            clickerGUI.Update(gameTime);
         }
     }
 }
