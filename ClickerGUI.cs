@@ -2,11 +2,13 @@
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.UI;
+using Terraria.IO;
 using Terraria.GameContent.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using XritoMod.UI;
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace XritoMod
@@ -60,11 +62,12 @@ namespace XritoMod
         
         //Upgrade panel and elements
         private UIPanel upgradePanel;
+        private UIPanel hoverPanel;
 
-        private List<UIImageButton> upgrades;
         private UIList upgradeList;
         private UIScrollbar upgradeScrollbar;
-        private UIUpgradeButton testUpgrade;
+
+        private const float upgradeHeight = 38f;
 
         public override void OnInitialize()
         {
@@ -169,10 +172,22 @@ namespace XritoMod
 
         private void InitUpgrades()
         {
-            testUpgrade = new UIUpgradeButton("Test", "blank");
-            testUpgrade.Width.Set(-25f, 1f);
-            testUpgrade.Height.Set(38f, 0f);
-            upgradeList.Add(testUpgrade);
+
+            Upgrades.InitUpgrades();
+
+            for(int i = 0; i < Upgrades.ID.Count; i++)
+            {
+                Upgrade upgrade;
+                Upgrades.ID.TryGetValue((short)i, out upgrade);
+                UIUpgradeButton button = new UIUpgradeButton(upgrade.Name, upgrade.Desc);
+                button.Width.Set(-25f, 1f);
+                button.Height.Set(upgradeHeight, 0f);
+                button.OnMouseOver += delegate { hoverPanel = button.hoverPanel; };
+                button.OnMouseOut += delegate { hoverPanel = null; };
+                upgradeList.Add(button);
+                upgradeList.UpdateOrder();
+            }
+
         }
 
         private void PlaceGUI(float newX, float newY)
@@ -212,14 +227,13 @@ namespace XritoMod
                 //Update UI elements
                 if (isVisible)
                 {
-                    if ((backPanel.IsMouseHovering || closeButton.IsMouseHovering || lockButton.IsMouseHovering) &&
-                            !upgradeScrollbar.IsMouseHovering)
+                    if (backPanel.IsMouseHovering || closeButton.IsMouseHovering || lockButton.IsMouseHovering)
                     {
                         Main.LocalPlayer.delayUseItem = true;
                     }
                     if (Main.mouseLeft && !Main.mouseLeftRelease)
                     {
-                        if (!isDragging && !isLocked && backPanel.IsMouseHovering)
+                        if (!isDragging && !isLocked && backPanel.IsMouseHovering && !upgradeScrollbar.IsMouseHovering)
                         {
                             isDragging = true;
                             lastMouseX = Main.mouseX;
@@ -230,6 +244,7 @@ namespace XritoMod
                     {
                         if (isDragging && !isLocked)
                         {
+                            hoverPanel = null;
                             float diffX = Main.mouseX - lastMouseX;
                             float diffY = Main.mouseY - lastMouseY;
                             lastMouseX = Main.mouseX;
@@ -243,6 +258,15 @@ namespace XritoMod
                         {
                             isDragging = false;
                         }
+                    }
+                    if(hoverPanel != null)
+                    {
+                        float right = panelLeft + panelWidth + 5f;
+                        float left =  panelLeft + panelWidth / 2 - hoverPanel.Width.Pixels - 5f;
+                        float newLeft = right + hoverPanel.Width.Pixels > Main.screenWidth ? left : right;
+                        hoverPanel.Left.Set(newLeft, 0f);
+                        hoverPanel.Top.Set(Main.mouseY - hoverPanel.Height.Pixels + upgradeHeight, 0f);
+                        hoverPanel.Recalculate();
                     }
                 }
             }
@@ -265,17 +289,15 @@ namespace XritoMod
                     mainButton.Draw(spriteBatch);
                     closeButton.Draw(spriteBatch);
                     lockButton.Draw(spriteBatch);
+
+                    if (hoverPanel != null)
+                        hoverPanel.Draw(spriteBatch);
                 }
             }
             catch (Exception e)
             {
                 Main.NewTextMultiline(e.ToString());
             }
-        }
-
-        public void CalculatePPS()
-        {
-
         }
 
         public void MainClicked()

@@ -15,7 +15,7 @@ namespace XritoMod.UI
         private String desc;
 
         private UIPanel mainPanel;
-        private UIPanel hoverPanel;
+        public UIPanel hoverPanel;
         private UITextPanel<String> buyButton;
 
         public event MouseEvent onBuyButtonClick;
@@ -60,8 +60,12 @@ namespace XritoMod.UI
             mainPanel.Append(buyButton);
 
             hoverPanel = new UIPanel();
+            hoverPanel.Width.Set(200f, 0f);
+            hoverPanel.Height.Set(75f, 0f);
 
             descLabel = new UIText(desc);
+            descLabel.VAlign = 0.5f;
+            descLabel.HAlign = 0.5f;
             hoverPanel.Append(descLabel);
         }
 
@@ -71,12 +75,6 @@ namespace XritoMod.UI
 
             mainPanel.Draw(spriteBatch);
             buyButton.Draw(spriteBatch);
-
-            if (IsMouseHovering)
-            {
-                
-                //hoverPanel.Draw(spriteBatch);
-            }
         }
     }
 }

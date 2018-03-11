@@ -39,6 +39,7 @@
     <Compile Include="Tiles\ClickerAccess.cs" />
     <Compile Include="UI\UIUpgradeButton.cs" />
     <Compile Include="UI\UIUtil.cs" />
+    <Compile Include="Upgrades.cs" />
     <Compile Include="XritoMod.cs" />
     <Compile Include="XritoPlayer.cs" />
     <Compile Include="XritoWorld.cs" />

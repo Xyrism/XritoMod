@@ -10,23 +10,24 @@ namespace XritoMod.UI
 
         public static void MouseHover(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (!(listeningElement is UIPanel)) return;
-            UIPanel panel = (UIPanel)listeningElement;
-            panel.BackgroundColor = new Color(63, 82, 151, 178);
+            ReColor(listeningElement, new Color(63, 82, 151, 178));
         }
 
         public static void MouseOut(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (!(listeningElement is UIPanel)) return;
-            UIPanel panel = (UIPanel)listeningElement;
-            panel.BackgroundColor = new Color(44, 57, 105, 178);
+            ReColor(listeningElement, new Color(44, 57, 105, 178));
         }
 
         public static void MouseDown(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (!(listeningElement is UIPanel)) return;
-            UIPanel panel = (UIPanel)listeningElement;
-            panel.BackgroundColor = new Color(53, 69, 126, 178);
+            ReColor(listeningElement, new Color(53, 69, 126, 178));
+        }
+
+        private static void ReColor(UIElement element, Color color)
+        {
+            if (!(element is UIPanel)) return;
+            UIPanel panel = (UIPanel)element;
+            panel.BackgroundColor = color;
         }
 
     }
